@@ -54,7 +54,8 @@
 
 {{ define "content" }}
 <form class="form-signin", action="/login", method="post">
-  <input type="text" name="_csrf" id="_csrf" class="form-control" placeholder="name" required autofocus value="{{ .token }}">
+  <h3 class="mb-5">登录</h3>
+  <input type="text" name="_csrf" id="_csrf" class="form-control hidden" placeholder="name" required autofocus value="{{ .token }}">
   <label for="name" class="sr-only">name</label>
   <input type="text" name="name" id="name" class="form-control" placeholder="name" required autofocus>
   <label for="password" class="sr-only">Password</label>

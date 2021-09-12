@@ -4,6 +4,7 @@ import (
 	"log"
 	"maker/controllers"
 	"maker/middlewares"
+	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -28,6 +29,12 @@ func InitRouter() *gin.Engine {
 	// routers
 	controllers.LoginRegister(router, authMiddleware)
 
+	router.GET("/index", authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"tokenString": "tokenString",
+			"expire":      "expire",
+		})
+	})
 	// router.GET("/login")
 	// router.POST("/login", authMiddleware.LoginHandler)
 

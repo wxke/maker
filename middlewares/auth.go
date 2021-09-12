@@ -45,16 +45,16 @@ func NewAuth() (*jwt.GinJWTMiddleware, error) {
 			// 登陆验证
 			userID := loginVals.Name
 			password := loginVals.Password
-			if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
+			if (userID == "wxkmaker" && password == "wxkmaker") || (userID == "test" && password == "test") {
 				return &models.User{
-					Name: "aaa",
+					Name: "wxkmaker",
 				}, nil
 			}
 
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*models.User); ok && v.Name == "admin" {
+			if v, ok := data.(*models.User); ok && v.Name == "wxkmaker" {
 				return true
 			}
 
@@ -66,6 +66,11 @@ func NewAuth() (*jwt.GinJWTMiddleware, error) {
 				"message": message,
 			})
 		},
+		LoginResponse: func(c *gin.Context, i int, s string, t time.Time) {
+			c.Set("tokenString", s)
+			c.Set("expire", t)
+			c.Next()
+		},
 		// TokenLookup is a string in the form of "<source>:<name>" that is used
 		// to extract token from the request.
 		// Optional. Default value "header:Authorization".
@@ -74,7 +79,7 @@ func NewAuth() (*jwt.GinJWTMiddleware, error) {
 		// - "query:<name>"
 		// - "cookie:<name>"
 		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenLookup: "cookie: token",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",
 

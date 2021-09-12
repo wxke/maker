@@ -17,7 +17,7 @@ func LoginRegister(router *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) {
 	login := router.Group("/login")
 	{
 		login.GET("/", loginController.index)
-		login.POST("/", loginController.auth)
+		login.POST("/", authMiddleware.LoginHandler, loginController.auth)
 	}
 }
 
@@ -29,7 +29,11 @@ func (l LoginController) index(c *gin.Context) {
 }
 
 func (l LoginController) auth(c *gin.Context) {
+	tokenString, _ := c.Get("tokenString")
+	expire, _ := c.Get("expire")
+	c.SetCookie("token", tokenString.(string), 3600, "/", "127.0.0.1", false, false)
 	c.JSON(http.StatusOK, gin.H{
-		"title": "登录",
+		"tokenString": tokenString,
+		"expire":      expire,
 	})
 }
