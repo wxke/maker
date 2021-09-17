@@ -10,6 +10,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
+	github.com/robinjoseph08/go-pg-migrations/v3 v3.0.0 // indirect
 	github.com/ugorji/go v1.2.6 // indirect
 	github.com/utrack/gin-csrf v0.0.0-20190424104817-40fb8d2c8fca
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
