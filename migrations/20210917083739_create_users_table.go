@@ -10,15 +10,15 @@ func init() {
 		_, err := db.Exec(`
 			CREATE TABLE users (
 				id UUID PRIMARY KEY UNIQUE DEFAULT uuid_generate_v4(),
-				name TEXT NOT NULL UNIQUE,
-				email TEXT NOT NULL UNIQUE,
-				password TEXT NOT NULL,
+				name VARCHAR(64) NOT NULL UNIQUE,
+				email VARCHAR(64) NOT NULL UNIQUE,
+				password VARCHAR(64) NOT NULL,
 				created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 			);
-			CREATE INDEX user_id_index ON users(id);
-			CREATE INDEX user_name_index ON users(name);
-			CREATE INDEX user_created_at_index ON users(created_at DESC NULLS LAST);
+			CREATE INDEX user_id_index ON users USING btree (id);
+			CREATE INDEX user_name_index ON users USING btree (name);
+			CREATE INDEX user_created_at_index ON users USING btree (created_at DESC);
 		`)
 		return err
 	}
