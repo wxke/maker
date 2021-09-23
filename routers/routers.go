@@ -15,6 +15,7 @@ func InitRouter() *gin.Engine {
 	router := gin.Default()
 	router.Static("/statics", "./statics")
 	router.LoadHTMLGlob("templates/**/*")
+
 	// middlewares
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())

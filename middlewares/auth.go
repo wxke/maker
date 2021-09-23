@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"maker/models"
 	"time"
 
@@ -10,10 +11,10 @@ import (
 
 var identityKey = "maker"
 
-type login struct {
-	Name     string `form:"name" json:"Name" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
-}
+// type login struct {
+// 	Name     string `form:"name" json:"Name" binding:"required"`
+// 	Password string `form:"password" json:"password" binding:"required"`
+// }
 
 func NewAuth() (*jwt.GinJWTMiddleware, error) {
 	return jwt.New(&jwt.GinJWTMiddleware{
@@ -23,6 +24,7 @@ func NewAuth() (*jwt.GinJWTMiddleware, error) {
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			fmt.Println("-------PayloadFunc-----", data.(*models.User))
 			if v, ok := data.(*models.User); ok {
 				return jwt.MapClaims{
 					identityKey: v.Name,
@@ -32,30 +34,36 @@ func NewAuth() (*jwt.GinJWTMiddleware, error) {
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
+			fmt.Println("-------IdentityHandler-----", claims)
 			return &models.User{
 				Name: claims[identityKey].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals login
-			if err := c.ShouldBind(&loginVals); err != nil {
+			var userParams models.User
+			if err := c.ShouldBind(&userParams); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
 
 			// 登陆验证
-			userID := loginVals.Name
-			password := loginVals.Password
-			if (userID == "wxkmaker" && password == "wxkmaker") || (userID == "test" && password == "test") {
-				return &models.User{
-					Name: "wxkmaker",
-				}, nil
+			user := &models.User{
+				Name: userParams.Name,
+			}
+			err := user.FindByName()
+			fmt.Println("-------Authenticator-----", user, err, userParams)
+			if err == nil && user.Password == userParams.Password {
+				return user, nil
 			}
 
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*models.User); ok && v.Name == "wxkmaker" {
-				return true
+			if v, ok := data.(*models.User); ok {
+				err := v.FindByName()
+				fmt.Println("-------Authorizator-----", v, err)
+				if err == nil {
+					return true
+				}
 			}
 
 			return false
