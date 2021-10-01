@@ -3,6 +3,7 @@ package middlewares
 import (
 	"fmt"
 	"maker/models"
+	"net/http"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -69,10 +70,7 @@ func NewAuth() (*jwt.GinJWTMiddleware, error) {
 			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, gin.H{
-				"code":    code,
-				"message": message,
-			})
+			c.Redirect(http.StatusFound, "/login")
 		},
 		LoginResponse: func(c *gin.Context, i int, s string, t time.Time) {
 			c.Set("tokenString", s)

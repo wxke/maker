@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-pg/pg/v10"
@@ -18,5 +19,11 @@ type User struct {
 
 func (user *User) FindByName() error {
 	err := db.Model(user).Where("? = ?", pg.Ident("name"), user.Name).Select()
+	return err
+}
+
+func (user *User) Create() error {
+	res, err := db.Model(user).Insert()
+	fmt.Println(res, err, user)
 	return err
 }
