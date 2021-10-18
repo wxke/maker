@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"maker/models"
 	"net/http"
 
@@ -50,7 +49,6 @@ func (l LoginController) signUp(c *gin.Context) {
 func (l LoginController) create(c *gin.Context) {
 	var userParams models.User
 	if err := c.ShouldBind(&userParams); err != nil {
-		fmt.Println(c.GetHeader("Referer"))
 		c.Redirect(http.StatusFound, c.GetHeader("Referer"))
 	}
 	user := &models.User{
@@ -62,6 +60,6 @@ func (l LoginController) create(c *gin.Context) {
 	if err := user.Create(); err != nil {
 		c.Redirect(http.StatusFound, c.GetHeader("Referer"))
 	} else {
-		c.Redirect(http.StatusFound, "/")
+		c.Redirect(http.StatusFound, "/login")
 	}
 }

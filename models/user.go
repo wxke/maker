@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/go-pg/pg/v10"
@@ -23,7 +22,6 @@ func (user *User) FindByName() error {
 }
 
 func (user *User) Create() error {
-	res, err := db.Model(user).Insert()
-	fmt.Println(res, err, user)
+	_, err := db.Model(user).Insert()
 	return err
 }
