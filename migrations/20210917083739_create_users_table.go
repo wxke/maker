@@ -16,8 +16,6 @@ func init() {
 				created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 			);
-			CREATE INDEX user_id_index ON users USING btree (id);
-			CREATE INDEX user_name_index ON users USING btree (name);
 			CREATE INDEX user_created_at_index ON users USING btree (created_at DESC);
 		`)
 		return err
